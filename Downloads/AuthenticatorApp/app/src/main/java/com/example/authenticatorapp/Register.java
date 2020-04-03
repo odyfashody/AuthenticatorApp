@@ -32,7 +32,7 @@ public class Register extends AppCompatActivity {
         emailId = findViewById(R.id.editText);
         password = findViewById(R.id.editText2);
         btnSignUp = findViewById(R.id.button);
-        tvSignin = findViewById(R.id.textView);
+        tvSignin = findViewById(R.id.textView3);
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,8 +57,10 @@ public class Register extends AppCompatActivity {
                             if(!task.isSuccessful()){
                                 Toast.makeText(Register.this, "Signup Unsuccessful, Please Try Again", Toast.LENGTH_SHORT).show();
                             } else {
-                              //  Intent i = new Intent(Register.this, HomeActivity.class);
-                              //  startActivity(i);
+                                Toast.makeText(Register.this, "Signup Successful", Toast.LENGTH_SHORT).show();
+
+//                                Intent i = new Intent(Register.this, LoginActivity.class);
+//                                startActivity(i);
                             }
                         }
                     });
@@ -68,14 +70,18 @@ public class Register extends AppCompatActivity {
             }
         });
 
+
+
         tvSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Register.this, Login.class);
+                Intent i = new Intent(Register.this, LoginActivity.class);
                 startActivity(i);
             }
         });
 
 
+
     }
+
 }
