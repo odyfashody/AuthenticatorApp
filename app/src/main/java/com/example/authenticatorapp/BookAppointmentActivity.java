@@ -23,10 +23,6 @@ public class BookAppointmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_appointment);
 
-        Button buttonSearchProviders = (Button)findViewById(R.id.buttonSearch);
-        final EditText editTextBusinessName = (EditText)findViewById(R.id.editTextBusinessName); //For adding filter to list later
-        final ListView listViewBusinessNameQuery = (ListView)findViewById(R.id.listViewBusinesses);
-
         //Temp list for demo
 //        Provider example1 = new Provider("Mike's Barbershop", "Mikes@email.com", "password123", "123 W. Street Ln.");
 //        ArrayList<Provider> Businesses = new ArrayList<>();
@@ -35,6 +31,10 @@ public class BookAppointmentActivity extends AppCompatActivity {
         BusinesssNames.add("Mike's Barbershop");
         BusinesssNames.add("Kyle's Barbershop");
         BusinesssNames.add("Charlie's Barbershop");
+
+        Button buttonSearchProviders = (Button)findViewById(R.id.buttonSearch);
+        final EditText editTextBusinessName = (EditText)findViewById(R.id.editTextBusinessName);
+        final ListView listViewBusinessNameQuery = (ListView)findViewById(R.id.listViewBusinesses);
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, BusinesssNames);
         listViewBusinessNameQuery.setAdapter(adapter);
@@ -59,11 +59,11 @@ public class BookAppointmentActivity extends AppCompatActivity {
         listViewBusinessNameQuery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
-                Intent appInfo = new Intent(BookAppointmentActivity.this, SelectDateAndTimeActivity.class);
+                Intent goToSelectedBusinessActivity = new Intent(BookAppointmentActivity.this, SelectDateAndTimeActivity.class);
 //                appInfo.putStringArrayListExtra("Businesses", BusinesssNames);
                 String name = (String) adapter.getItemAtPosition(position).toString();
-                appInfo.putExtra("CompanyName", name);
-                startActivity(appInfo);
+                goToSelectedBusinessActivity.putExtra("CompanyName", name);
+                startActivity(goToSelectedBusinessActivity);
             }
         });
     }

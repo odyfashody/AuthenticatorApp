@@ -16,19 +16,24 @@ public class SelectDateAndTimeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_date_and_time);
         calendar = (CalendarView)findViewById(R.id.calendarView);
 
+        Intent extraIntentInfo = getIntent();
+        final String CompanyName = extraIntentInfo.getStringExtra("CompanyName");
+        TextView textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
+        textViewCompanyName.setText(CompanyName);
+
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-               Intent goToTimeActivity = new Intent(SelectDateAndTimeActivity.this, MainActivity.class);
+               Intent goToTimeActivity = new Intent(SelectDateAndTimeActivity.this, SelectTimeActivity.class);
                String date = month + "/" + dayOfMonth + "/" + year;
                goToTimeActivity.putExtra("date", date);
+               goToTimeActivity.putExtra("CompanyName", CompanyName);
                startActivity(goToTimeActivity);
             }
         });
-
-        Intent extraIntentInfo = getIntent();
-        String CompanyName = extraIntentInfo.getStringExtra("CompanyName");
-        TextView textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
-        textViewCompanyName.setText(CompanyName);
+//        Intent extraIntentInfo = getIntent();
+//        String CompanyName = extraIntentInfo.getStringExtra("CompanyName");
+//        TextView textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
+//        textViewCompanyName.setText(CompanyName);
     }
 }
