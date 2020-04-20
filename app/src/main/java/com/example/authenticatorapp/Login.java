@@ -33,7 +33,7 @@ public class Login extends AppCompatActivity {
         emailId = findViewById(R.id.editText);
         password = findViewById(R.id.editText2);
         btnSignin = findViewById(R.id.button);
-        tvSignup = findViewById(R.id.textViewRegister);
+        tvSignup = findViewById(R.id.textView);
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
 
