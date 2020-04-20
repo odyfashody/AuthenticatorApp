@@ -7,13 +7,24 @@
     tools:context=".SelectDateAndTimeActivity">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textViewBusinessName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/select_date_and_time"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.022" />
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="417dp"
+        android:layout_height="376dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.166" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

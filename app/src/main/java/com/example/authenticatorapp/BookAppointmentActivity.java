@@ -25,7 +25,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
 
         Button buttonSearchProviders = (Button)findViewById(R.id.buttonSearch);
         final EditText editTextBusinessName = (EditText)findViewById(R.id.editTextBusinessName); //For adding filter to list later
-        ListView listViewBusinessNameQuery = (ListView)findViewById(R.id.listViewBusinesses);
+        final ListView listViewBusinessNameQuery = (ListView)findViewById(R.id.listViewBusinesses);
 
         //Temp list for demo
 //        Provider example1 = new Provider("Mike's Barbershop", "Mikes@email.com", "password123", "123 W. Street Ln.");
@@ -60,7 +60,9 @@ public class BookAppointmentActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                 Intent appInfo = new Intent(BookAppointmentActivity.this, SelectDateAndTimeActivity.class);
-                appInfo.putStringArrayListExtra("Businesses", BusinesssNames);
+//                appInfo.putStringArrayListExtra("Businesses", BusinesssNames);
+                String name = (String) adapter.getItemAtPosition(position).toString();
+                appInfo.putExtra("CompanyName", name);
                 startActivity(appInfo);
             }
         });
