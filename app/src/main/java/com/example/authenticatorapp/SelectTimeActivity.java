@@ -24,7 +24,7 @@ public class SelectTimeActivity extends AppCompatActivity {
         schedule.add("7:00 AM");
         schedule.add("8:00 AM");
         schedule.add("9:00 AM");
-        schedule.add("1:00 AM");
+        schedule.add("10:00 AM");
 //        schedule.add("11:00 AM");
 //        schedule.add("12:00 PM");
 //        schedule.add("10:00 PM");
@@ -42,17 +42,21 @@ public class SelectTimeActivity extends AppCompatActivity {
         listViewSchedule.setAdapter(adapter);
 
         Intent extraIntentInfo = getIntent();
-        String CompanyName = extraIntentInfo.getStringExtra("CompanyName");
+        final String CompanyName = extraIntentInfo.getStringExtra("CompanyName");
+        final String appointmentDate = extraIntentInfo.getStringExtra("AppointmentDate");
         TextView textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
-        textViewCompanyName.setText(CompanyName);
+        String NameAndDate = CompanyName + " " + appointmentDate;
+        textViewCompanyName.setText(NameAndDate);
 
         listViewSchedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                 Intent goToClientInformation = new Intent(SelectTimeActivity.this, ClientInformationActivity.class);
 //                appInfo.putStringArrayListExtra("Businesses", BusinesssNames);
-                String name = (String) adapter.getItemAtPosition(position).toString();
-                goToClientInformation.putExtra("CompanyName", name);
+                String time = (String) adapter.getItemAtPosition(position).toString();
+                goToClientInformation.putExtra("CompanyName", CompanyName);
+                goToClientInformation.putExtra("AppointmentDate", appointmentDate);
+                goToClientInformation.putExtra("AppointmentTime", time);
                 startActivity(goToClientInformation);
             }
         });

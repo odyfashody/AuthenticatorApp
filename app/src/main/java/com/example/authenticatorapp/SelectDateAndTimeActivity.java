@@ -26,14 +26,10 @@ public class SelectDateAndTimeActivity extends AppCompatActivity {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                Intent goToTimeActivity = new Intent(SelectDateAndTimeActivity.this, SelectTimeActivity.class);
                String date = month + "/" + dayOfMonth + "/" + year;
-               goToTimeActivity.putExtra("date", date);
+               goToTimeActivity.putExtra("AppointmentDate", date);
                goToTimeActivity.putExtra("CompanyName", CompanyName);
                startActivity(goToTimeActivity);
             }
         });
-//        Intent extraIntentInfo = getIntent();
-//        String CompanyName = extraIntentInfo.getStringExtra("CompanyName");
-//        TextView textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
-//        textViewCompanyName.setText(CompanyName);
     }
 }
