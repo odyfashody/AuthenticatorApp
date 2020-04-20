@@ -37,20 +37,6 @@
         app:layout_constraintVertical_bias="0.187"
         app:srcCompat="@drawable/ontime_logo" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="240dp"
-        android:layout_height="47dp"
-        android:background="#212121"
-        android:text="Login"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.741" />
-
     <EditText
         android:id="@+id/editText"
         android:layout_width="wrap_content"
@@ -69,7 +55,34 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.575" />
+        app:layout_constraintVertical_bias="0.613" />
+
+    <Button
+        android:id="@+id/buttonLogout"
+        android:layout_width="240dp"
+        android:layout_height="47dp"
+        android:background="#212121"
+        android:text="Login"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.777" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="310dp"
+        android:layout_height="53dp"
+        android:gravity="center"
+        android:text="Not registered? Sign up here"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.871" />
 
     <EditText
         android:id="@+id/editText2"
@@ -89,20 +102,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.595" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="310dp"
-        android:layout_height="53dp"
-        android:gravity="center"
-        android:text="Not registered? Sign up here"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.834" />
+        app:layout_constraintVertical_bias="0.636" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

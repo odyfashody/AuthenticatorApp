@@ -31,7 +31,7 @@ public class Register extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         emailId = findViewById(R.id.editText);
         password = findViewById(R.id.editText2);
-        btnSignUp = findViewById(R.id.button);
+        btnSignUp = findViewById(R.id.buttonLogout);
         tvSignin = findViewById(R.id.textView3);
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

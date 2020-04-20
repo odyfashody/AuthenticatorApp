@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".SetScheduleActivity">
 
     <TextView
         android:id="@+id/textMainCompanyTitle"
@@ -26,18 +26,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/welcome_you_are_logged_in"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textMainCompanyTitle"
-        app:layout_constraintVertical_bias="0.106" />
-
     <Button
         android:id="@+id/buttonLogout"
         android:layout_width="240dp"
@@ -54,13 +42,12 @@
 
     <ListView
         android:id="@+id/listViewSchedule"
-        android:layout_width="408dp"
-        android:layout_height="417dp"
+        android:layout_width="411dp"
+        android:layout_height="407dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textMainCompanyTitle" />
 
     <Button
         android:id="@+id/buttonSetSchedule"
@@ -75,4 +62,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.885" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
