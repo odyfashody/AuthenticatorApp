@@ -1,29 +1,18 @@
 package com.example.authenticatorapp;
 
-import android.telephony.PhoneNumberFormattingTextWatcher;
-
-import java.util.ArrayList;
-
 public class Provider {
-    public String businessName;
-    public String businessEmail;
-    public String businessPassword;
-    public String businessAddress;
-    public Schedule daySchedule;
-    public ArrayList<Schedule> test;
-//    public PhoneNumberFormattingTextWatcher businessNumber;
+    private String companyName;
+    private String email;
+    private String password;
+    private String address;
 
-    public Provider(String name, String email, String pswd, String address) //, PhoneNumberFormattingTextWatcher phoneNmbr)
-    {
-        businessName = name;
-        businessEmail = email;
-        businessPassword = pswd;
-        businessAddress = address;
-//        businessNumber = phoneNmbr;
-    }
+    public Provider () {}
 
-    public String toString()
+    public Provider(String companyName1, String email1, String password1, String address1)
     {
-        return businessName;
+        companyName = companyName1;
+        email = email1;
+        password = password1;
+        address = address1;
     }
 }
