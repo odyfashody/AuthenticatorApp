@@ -9,12 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SetScheduleActivity"></activity>
+        <activity android:name=".SetAvailabilityActivity"></activity>
         <activity android:name=".ConfirmationActivity" />
         <activity android:name=".ClientInformationActivity" />
         <activity android:name=".SelectTimeActivity" />
-        <activity android:name=".SelectDateAndTimeActivity" />
-        <activity android:name=".BookAppointmentActivity" />
+        <activity android:name=".SelectDateActivity" />
+        <activity android:name=".SearchProviderActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".Register" />

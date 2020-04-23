@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -61,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
         buttonSetSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goToSetSchedule = new Intent(HomeActivity.this, SetScheduleActivity.class);
+                Intent goToSetSchedule = new Intent(HomeActivity.this, SetAvailabilityActivity.class);
                 startActivity(goToSetSchedule);
             }
         });

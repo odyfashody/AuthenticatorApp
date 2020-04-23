@@ -14,13 +14,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
-public class SetScheduleActivity extends AppCompatActivity {
+public class SetAvailabilityActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_schedule);
+        setContentView(R.layout.activity_set_availability);
         ArrayList<String> schedule = new ArrayList<>();
         schedule.add("7:00 AM");
         schedule.add("8:00 AM");
@@ -47,9 +47,9 @@ public class SetScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                Intent intToRegistration = new Intent(SetScheduleActivity.this, LoginActivity.class);
+                Intent intToRegistration = new Intent(SetAvailabilityActivity.this, LoginActivity.class);
                 startActivity(intToRegistration);
-                Toast.makeText(SetScheduleActivity.this, "Logged out Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SetAvailabilityActivity.this, "Logged out Successfully", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -57,7 +57,7 @@ public class SetScheduleActivity extends AppCompatActivity {
         buttonSetSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goToSetSchedule = new Intent(SetScheduleActivity.this, HomeActivity.class);
+                Intent goToSetSchedule = new Intent(SetAvailabilityActivity.this, HomeActivity.class);
                 startActivity(goToSetSchedule);
             }
         });

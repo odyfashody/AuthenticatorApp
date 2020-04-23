@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -20,74 +21,86 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientInformationActivity extends AppCompatActivity {
+    //Database (db) and temporary object (dateToSave) container
+    private Map<String, Object> dataToSave;
+    private DocumentReference db;
+    //Intent keys for getStringExtra() retrieval
+    private static final String COMPANY_NAME = "CompanyName";
+    private static final String APPOINTMENT_DATE = "AppointmentDate";
+    private static final String APPOINTMENT_TIME = "AppointmentTime";
+    private static final String CLIENT_NAME = "ClientName";
+    private static final String CLIENT_PHONE_NUMBER = "ClientPhoneNumber";
+    //Database collection/path names
+    private static final String PATH_PROVIDER_COLLECTION = "Providers";
+    private static final String PATH_DATE_COLLECTION = "Daily Schedule";
+    private static final String PATH_CLIENT_COLLECTION = "Clients";
+    //Logging info
+    private static final String TAG = "AppointmentBooking";
 
-    private DocumentReference db = FirebaseFirestore.getInstance().document("Database/Test");
-
-    public static final String FIRST_KEY = "name";
-    public static final String SECOND_KEY = "phoneNumber";
-    public static final String TAG = "ClientInformation";
-
+    private String companyName;
+    private String appointmentDate;
+    private String appointmentTime;
+    private String clientPhoneNumber;
+    private String clientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_information);
+        TextView textViewAppointmentInfo = (TextView) findViewById(R.id.textViewAppointmentInfo);
 
+        //Getting the passed variables from previous Activity.
         Intent extraIntentInfo = getIntent();
-        final String companyName = extraIntentInfo.getStringExtra("CompanyName");
-        final String appointmentDate = extraIntentInfo.getStringExtra("AppointmentDate");
-        final String appointmentTime = extraIntentInfo.getStringExtra("AppointmentTime");
+        companyName = extraIntentInfo.getStringExtra(COMPANY_NAME);
+        appointmentDate = extraIntentInfo.getStringExtra(APPOINTMENT_DATE);
+        appointmentTime = extraIntentInfo.getStringExtra(APPOINTMENT_TIME);
+        String NameDateAndTime = companyName + "\n" + appointmentDate + "\n" + appointmentTime;
 
-        TextView textViewAppointmentInfo = (TextView)findViewById(R.id.textViewAppointmentInfo);
-        final String NameDateAndTime = companyName + "\n" + appointmentDate + "\n" + appointmentTime;
+        //Adding information to the local object object.put(KEY, value);
+        dataToSave = new HashMap<String, Object>();
+        dataToSave.put(COMPANY_NAME, companyName);
+        dataToSave.put(APPOINTMENT_DATE, appointmentDate);
+        dataToSave.put(APPOINTMENT_TIME, appointmentTime);
+
         textViewAppointmentInfo.setText(NameDateAndTime);
-
-        EditText editTextClientName = (EditText) findViewById(R.id.editTextClientName);
-        EditText editTextClientPhoneNumber = (EditText) findViewById(R.id.editTextClientPhoneNumber);
-
-        final String clientName = editTextClientName.toString();
-        final String clientPhoneNumber = editTextClientPhoneNumber.toString();
-
-        Button submitClientInfo = (Button) findViewById(R.id.buttonSubmit);
-//        submitClientInfo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //Add Validation first before going to new Activity.
-//                Intent goToConfirmation = new Intent(ClientInformationActivity.this, ConfirmationActivity.class);
-//                goToConfirmation.putExtra("CompanyName", companyName);
-//                goToConfirmation.putExtra("AppointmentDate", appointmentDate);
-//                goToConfirmation.putExtra("AppointmentTime", appointmentTime);
-//                goToConfirmation.putExtra("AppointmentInfo", NameDateAndTime);
-//                goToConfirmation.putExtra("ClientName", clientName);
-//                goToConfirmation.putExtra("ClientPhoneNumber", clientPhoneNumber);
-//                startActivity(goToConfirmation);
-//            }
-//        });
     }
 
-    public void saveUser(View view)
-    {
+    public void goToConfirmationActivity(View view) {
+        Intent goToConfirmation = new Intent(ClientInformationActivity.this, ConfirmationActivity.class);
+        goToConfirmation.putExtra(COMPANY_NAME, companyName);
+        goToConfirmation.putExtra(APPOINTMENT_DATE, appointmentDate);
+        goToConfirmation.putExtra(APPOINTMENT_TIME, appointmentTime);
+        startActivity(goToConfirmation);
+    }
+
+    public void saveAppointment(final View view) {
+        //Retrieving text input
         EditText nameEditText = (EditText) findViewById(R.id.editTextClientName);
         EditText phoneNumberEditText = (EditText) findViewById(R.id.editTextClientPhoneNumber);
-        String name = nameEditText.getText().toString();
-        String phoneNumber = phoneNumberEditText.getText().toString();
+        clientName = nameEditText.getText().toString();
+        clientPhoneNumber = phoneNumberEditText.getText().toString();
 
-        if (name.isEmpty() || phoneNumber.isEmpty()) {
+        if (clientName.isEmpty() || clientPhoneNumber.isEmpty()) {
             return;
         }
+        //Adding the remaining info to local object
+        dataToSave.put(CLIENT_NAME, clientName);
+        dataToSave.put(CLIENT_PHONE_NUMBER, clientPhoneNumber);
 
-        Map<String, Object> dataToSave = new HashMap<String, Object>();
-        dataToSave.put(FIRST_KEY, name);
-        dataToSave.put(SECOND_KEY, phoneNumber);
+        //The route to save the local object to
+        db = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(PATH_DATE_COLLECTION).document(appointmentDate).collection(PATH_CLIENT_COLLECTION).document(appointmentTime);
+        //Saves to the db within the user collection. add() method gives it the random ID and saves to db.
         db.set(dataToSave).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "Saved to db!");
+                Log.d(TAG, "Success! Saved to db!");
+                //Calls intent function if successful
+                goToConfirmationActivity(view);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Not saved to db!", e);
+                Log.w(TAG, "Error! Not saved to db!", e);
             }
         });
     }

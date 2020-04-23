@@ -14,49 +14,56 @@ import java.util.ArrayList;
 
 public class SelectTimeActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
+    //Intent key words
+    public static final String COMPANY_NAME = "CompanyName";
+    public static final String APPOINTMENT_DATE = "AppointmentDate";
+    public static final String APPOINTMENT_TIME = "AppointmentTime";
+
+    private String companyName;
+    private String appointmentDate;
+    private String time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_time);
-
+        ListView listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
+        TextView textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
+        //Temporary schedule till business registration completed
         ArrayList<String> schedule = new ArrayList<>();
         schedule.add("7:00 AM");
         schedule.add("8:00 AM");
         schedule.add("9:00 AM");
         schedule.add("10:00 AM");
-//        schedule.add("11:00 AM");
-//        schedule.add("12:00 PM");
-//        schedule.add("10:00 PM");
-//        schedule.add("2:00 PM");
-//        schedule.add("3:00 PM");
+        schedule.add("11:00 AM");
+        schedule.add("12:00 PM");
+        schedule.add("1:00 PM");
+        schedule.add("2:00 PM");
+        schedule.add("3:00 PM");
         schedule.add("4:00 PM");
         schedule.add("5:00 PM");
         schedule.add("6:00 PM");
         schedule.add("7:00 PM");
         schedule.add("8:00 PM");
 
-        ListView listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
-        listViewSchedule.setAdapter(adapter);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
         listViewSchedule.setAdapter(adapter);
 
+        //Getting the passed variables from previous Activity.
         Intent extraIntentInfo = getIntent();
-        final String CompanyName = extraIntentInfo.getStringExtra("CompanyName");
-        final String appointmentDate = extraIntentInfo.getStringExtra("AppointmentDate");
-        TextView textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
-        String NameAndDate = CompanyName + " " + appointmentDate;
-        textViewCompanyName.setText(NameAndDate);
+        companyName = extraIntentInfo.getStringExtra(COMPANY_NAME);
+        appointmentDate = extraIntentInfo.getStringExtra(APPOINTMENT_DATE);
+        String nameAndDate = companyName + " " + appointmentDate;
+        textViewCompanyName.setText(nameAndDate);
 
         listViewSchedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                 Intent goToClientInformation = new Intent(SelectTimeActivity.this, ClientInformationActivity.class);
-//                appInfo.putStringArrayListExtra("Businesses", BusinesssNames);
-                String time = (String) adapter.getItemAtPosition(position).toString();
-                goToClientInformation.putExtra("CompanyName", CompanyName);
-                goToClientInformation.putExtra("AppointmentDate", appointmentDate);
-                goToClientInformation.putExtra("AppointmentTime", time);
+                time = (String) adapter.getItemAtPosition(position).toString();
+                goToClientInformation.putExtra(COMPANY_NAME, companyName);
+                goToClientInformation.putExtra(APPOINTMENT_DATE, appointmentDate);
+                goToClientInformation.putExtra(APPOINTMENT_TIME, time);
                 startActivity(goToClientInformation);
             }
         });

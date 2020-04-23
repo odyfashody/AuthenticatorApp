@@ -14,4 +14,8 @@
     <string name="book_appointment_page">Book Appointment Page</string>
     <string name="BusinessName" />
     <string name="select_date_and_time">Select Date And Time</string>
+    <string name="text">Text</string>
+    <string name="appointment_booked">Appointment Booked!</string>
+    <string name="done">Done</string>
+    <string name="image">Image</string>
 </resources>
