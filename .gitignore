@@ -1,0 +1,9 @@
+# Android Studio
+*.iml
+.idea
+.gradle
+build/
+.navigation
+captures/
+output.json 
+local.properties
