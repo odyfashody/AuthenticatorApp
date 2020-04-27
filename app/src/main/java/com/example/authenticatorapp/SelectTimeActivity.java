@@ -1,17 +1,23 @@
 package com.example.authenticatorapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,23 +38,84 @@ public class SelectTimeActivity extends AppCompatActivity {
     private static final String PATH_CLIENT_COLLECTION = "Clients";
     //Database setup
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference clientRef = db.collection(PATH_PROVIDER_COLLECTION);
+    private DocumentReference docRef;
+    //Logging information
+    private final String TAG = "SelectTime";
 
     private String companyName;
     private String appointmentDate;
     private String appointmentTime;
 
+    ListView listViewSchedule;
+    TextView textViewCompanyName;
+    Provider provider;
+    String startTime;
+    String endTime;
+    ArrayList<String> schedule = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_time);
-        ListView listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
-        TextView textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
+
+        listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
+        textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
+
+        //Getting the passed variables from previous Activity.
+        Intent extraIntentInfo = getIntent();
+        companyName = extraIntentInfo.getStringExtra(COMPANY_NAME);
+        appointmentDate = extraIntentInfo.getStringExtra(APPOINTMENT_DATE);
+        String nameAndDate = companyName + " " + appointmentDate;
+        textViewCompanyName.setText(nameAndDate);
+
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
+
+        final DocumentReference docRef = db.collection(PATH_PROVIDER_COLLECTION).document(companyName);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        provider = document.toObject(Provider.class);
+                        startTime = provider.getStartTime();
+                        endTime = provider.getEndTime();
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        Log.d(TAG, "provider: " + provider.toString());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+
+        System.out.println("Start time: " + startTime);
+        System.out.println("End time: " + endTime);
+//        int startWhereColonIs = startTime.indexOf(':');
+//        String startHour = startTime.substring(0, startWhereColonIs);
+//        int endWhereColonIs = endTime.indexOf(':');
+//        String endHour = endTime.substring(0, endWhereColonIs);
+//        for(int i = 0; i < 2; i ++)
+//        {
+//            for(int j = 1; j <= 12; j++)
+//            {
+//                if(i == 0 && j >= Integer.parseInt(startHour))
+//                {
+//                    schedule.add(j + ":00 AM");
+//                }
+//                if(i == 1 && j <= Integer.parseInt(endHour))
+//                {
+//                    schedule.add(j + ":00 PM");
+//                }
+//            }
+//        }
 
         //Temporary schedule till business registration completed
-        ArrayList<String> schedule = new ArrayList<>();
-        schedule.add("7:00 AM");
-        schedule.add("8:00 AM");
+//        schedule.add("7:00 AM");
+//        schedule.add("8:00 AM");
         schedule.add("9:00 AM");
         schedule.add("10:00 AM");
         schedule.add("11:00 AM");
@@ -62,15 +129,7 @@ public class SelectTimeActivity extends AppCompatActivity {
         schedule.add("7:00 PM");
         schedule.add("8:00 PM");
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
         listViewSchedule.setAdapter(adapter);
-
-        //Getting the passed variables from previous Activity.
-        Intent extraIntentInfo = getIntent();
-        companyName = extraIntentInfo.getStringExtra(COMPANY_NAME);
-        appointmentDate = extraIntentInfo.getStringExtra(APPOINTMENT_DATE);
-        String nameAndDate = companyName + " " + appointmentDate;
-        textViewCompanyName.setText(nameAndDate);
 
         listViewSchedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

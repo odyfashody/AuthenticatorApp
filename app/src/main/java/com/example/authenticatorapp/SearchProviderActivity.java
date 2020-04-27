@@ -39,15 +39,15 @@ public class SearchProviderActivity extends AppCompatActivity {
     private static final String COMPANY_NAME = "CompanyName";
     //Database collection/path names
     private static final String PATH_PROVIDER_COLLECTION = "Providers";
-
+    //Logging information
     private static final String TAG = "Search Provider";
     //Database setup
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference providerRef = db.collection(PATH_PROVIDER_COLLECTION);
 
-    List<String> BusinessNames = new ArrayList<>();
     EditText editTextBusinessName;
     ListView listViewBusinessNameQuery;
+    List<String> BusinessNames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +56,7 @@ public class SearchProviderActivity extends AppCompatActivity {
 
         editTextBusinessName = (EditText) findViewById(R.id.editTextBusinessName);
         listViewBusinessNameQuery = (ListView) findViewById(R.id.listViewBusinesses);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, BusinessNames);
 
         providerRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -75,9 +76,6 @@ public class SearchProviderActivity extends AppCompatActivity {
                 }
             }
         });
-
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, BusinessNames);
-        listViewBusinessNameQuery.setAdapter(adapter);
 
         editTextBusinessName.addTextChangedListener(new TextWatcher() {
             @Override
