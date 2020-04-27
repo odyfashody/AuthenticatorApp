@@ -10,18 +10,33 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 
 public class SelectTimeActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
     //Intent key words
-    public static final String COMPANY_NAME = "CompanyName";
-    public static final String APPOINTMENT_DATE = "AppointmentDate";
-    public static final String APPOINTMENT_TIME = "AppointmentTime";
+    private static final String COMPANY_NAME = "CompanyName";
+    private static final String APPOINTMENT_DATE = "AppointmentDate";
+    private static final String APPOINTMENT_TIME = "AppointmentTime";
+    private static final String CLIENT_NAME = "ClientName";
+    private static final String CLIENT_PHONE_NUMBER = "ClientPhoneNumber";
+    //Database collection/path names
+    private static final String PATH_PROVIDER_COLLECTION = "Providers";
+    private static final String PATH_DATE_COLLECTION = "Daily Schedule";
+    private static final String PATH_CLIENT_COLLECTION = "Clients";
+    //Database setup
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference clientRef = db.collection(PATH_PROVIDER_COLLECTION);
 
     private String companyName;
     private String appointmentDate;
-    private String time;
+    private String appointmentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +44,7 @@ public class SelectTimeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_time);
         ListView listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
         TextView textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
+
         //Temporary schedule till business registration completed
         ArrayList<String> schedule = new ArrayList<>();
         schedule.add("7:00 AM");
@@ -60,10 +76,10 @@ public class SelectTimeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                 Intent goToClientInformation = new Intent(SelectTimeActivity.this, ClientInformationActivity.class);
-                time = (String) adapter.getItemAtPosition(position).toString();
+                appointmentTime = (String) adapter.getItemAtPosition(position).toString();
                 goToClientInformation.putExtra(COMPANY_NAME, companyName);
                 goToClientInformation.putExtra(APPOINTMENT_DATE, appointmentDate);
-                goToClientInformation.putExtra(APPOINTMENT_TIME, time);
+                goToClientInformation.putExtra(APPOINTMENT_TIME, appointmentTime);
                 startActivity(goToClientInformation);
             }
         });
