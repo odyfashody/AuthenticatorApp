@@ -22,16 +22,39 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
     final ArrayList<String> schedule = new ArrayList<>();
+    //Intent keys for getStringExtra() retrieval
+    private static final String COMPANY_NAME = "CompanyName";
+    private static final String APPOINTMENT_DATE = "AppointmentDate";
+    private static final String APPOINTMENT_TIME = "AppointmentTime";
+    private static final String CLIENT_NAME = "ClientName";
+    private static final String CLIENT_PHONE_NUMBER = "ClientPhoneNumber";
+    //Database collection/path names
+    private static final String PATH_PROVIDER_COLLECTION = "Providers";
+    private static final String PATH_DATE_COLLECTION = "Daily Schedule";
+    private static final String PATH_CLIENT_COLLECTION = "Clients";
+
+    private String companyName;
+    private String appointmentDate;
+    private String appointmentTime;
+
     private String TAG = "HomeActivity";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference docRef = db.collection("Providers");
+    private CollectionReference docRef = db.collection(PATH_PROVIDER_COLLECTION);
+    //        db.collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(currDateStr);
 
-    public String email;
+    private Provider provider;
+    Date dateCurr = Calendar.getInstance().getTime();
+    SimpleDateFormat tempDate = new SimpleDateFormat("MMM-dd-yyyy");
+    String currDateStr = tempDate.format(dateCurr);
+
     Button btnLogout;
 
 
@@ -40,10 +63,11 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Button buttonSetSchedule = (Button) findViewById(R.id.buttonSetSchedule);
+        final ListView listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
         btnLogout = findViewById(R.id.buttonLogout);
 
         Intent extraIntentInfo = getIntent();
-        email = extraIntentInfo.getStringExtra("email");
+        String email = extraIntentInfo.getStringExtra("email");
 
         db.collection("Providers")
                 .whereEqualTo("email", email)
@@ -53,17 +77,34 @@ public class HomeActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                provider = document.toObject(Provider.class);
                                 Log.d(TAG, document.getId() + ": " + document.getData());
+                                companyName = provider.getCompanyName();
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
-
-
-
-
+        docRef.document(companyName).collection(currDateStr);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful())
+                {
+                    for(QueryDocumentSnapshot document : task.getResult())
+                    {
+                        schedule.add(document.getId());
+                    }
+                    listViewSchedule.setAdapter(adapter);
+                    Log.d(TAG, schedule.toString());
+                }
+                else
+                {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
 
         schedule.add("Eric @ 11:00 AM\nPhone: 5592345678");
         schedule.add("John @ 3:00 PM\nPhone: 1233211234");
@@ -72,7 +113,6 @@ public class HomeActivity extends AppCompatActivity {
         schedule.add("Kyle @ 7:00 PM\n Phone: 4093124949");
 
 
-        final ListView listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
         listViewSchedule.setAdapter(adapter);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
         listViewSchedule.setAdapter(adapter);
