@@ -80,31 +80,47 @@ public class HomeActivity extends AppCompatActivity {
                                 provider = document.toObject(Provider.class);
                                 Log.d(TAG, document.getId() + ": " + document.getData());
                                 companyName = provider.getCompanyName();
+//                                docRef.document(companyName).collection("3-29-2020");
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
-        docRef.document(companyName).collection(currDateStr);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful())
-                {
-                    for(QueryDocumentSnapshot document : task.getResult())
-                    {
-                        schedule.add(document.getId());
+
+        docRef.whereEqualTo("Appointment Date", "3-29-2020")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
                     }
-                    listViewSchedule.setAdapter(adapter);
-                    Log.d(TAG, schedule.toString());
-                }
-                else
-                {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
+                });
+//        docRef.document(companyName).collection("3-29-2020");
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful())
+//                {
+//                    for(QueryDocumentSnapshot document : task.getResult())
+//                    {
+//                        schedule.add(document.getId());
+//                    }
+//                    listViewSchedule.setAdapter(adapter);
+//                    Log.d(TAG, schedule.toString());
+//                }
+//                else
+//                {
+//                    Log.d(TAG, "Error getting documents: ", task.getException());
+//                }
+//            }
+//        });
 
         schedule.add("Eric @ 11:00 AM\nPhone: 5592345678");
         schedule.add("John @ 3:00 PM\nPhone: 1233211234");

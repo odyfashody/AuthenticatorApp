@@ -86,7 +86,7 @@ public class SelectTimeActivity extends AppCompatActivity {
                         Log.d(TAG, "No such document");
                     }
                 } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+                    Log.d(TAG, "Pulling data failed with ", task.getException());
                 }
             }
         });
