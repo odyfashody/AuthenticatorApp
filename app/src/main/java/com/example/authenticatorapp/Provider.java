@@ -8,7 +8,8 @@ public class Provider {
     private String email;
 //    private String password;
 
-    public Provider () {}
+    public Provider() {
+    }
 
     public Provider(String companyName1, String email1, String address1, String startTime1, String endTime1) //String password1
     {
@@ -39,6 +40,7 @@ public class Provider {
     public String getAddress() {
         return address;
     }
+
     public String toString() {
         return name + " " + startTime + " " + endTime;
     }

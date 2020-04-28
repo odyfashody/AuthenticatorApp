@@ -46,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
     private static final String PATH_DATE_COLLECTION = "Daily Schedule";
     private static final String PATH_CLIENT_COLLECTION = "Clients";
 
-    private  String companyEmail;
+    private String companyEmail;
     private String companyName;
     private String appointmentDate;
     private String appointmentTime;
@@ -86,12 +86,11 @@ public class HomeActivity extends AppCompatActivity {
         colRef.whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                         Log.d(TAG, documentSnapshot.getId() + ": " + documentSnapshot.getData());
                     }
-                }
-                else {
+                } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
@@ -102,17 +101,13 @@ public class HomeActivity extends AppCompatActivity {
         colRef.document("JK Express Shipping").collection(dateStr).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful())
-                {
-                    for(QueryDocumentSnapshot document : task.getResult())
-                    {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
                         schedule.add(document.getId());
                     }
                     listViewSchedule.setAdapter(adapter);
                     Log.d(TAG, schedule.toString());
-                }
-                else
-                {
+                } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
@@ -138,7 +133,6 @@ public class HomeActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
-
 
 
 //        schedule.add("Eric @ 11:00 AM\nPhone: 5592345678");

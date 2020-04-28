@@ -46,7 +46,7 @@ public class SetAvailabilityActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
         listViewSchedule.setAdapter(adapter);
 
-        Button btnLogout = (Button)findViewById(R.id.buttonLogout);
+        Button btnLogout = (Button) findViewById(R.id.buttonLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

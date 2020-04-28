@@ -19,8 +19,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(pageIntent);
     }
 
-    public void goToLoginActivity(View view)
-    {
+    public void goToLoginActivity(View view) {
         Intent pageIntent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(pageIntent);
     }

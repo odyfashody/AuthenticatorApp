@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private EditText emailId, password;
-    private Button btnSignin, btnBacktomain;
+    private Button btnSignin;
     TextView tvSignup;
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -30,7 +30,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
-
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         emailId = findViewById(R.id.editText);
@@ -43,51 +42,38 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-                if(mFirebaseUser != null){
+                if (mFirebaseUser != null) {
                     Toast.makeText(LoginActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
                     Intent goToPage = new Intent(LoginActivity.this, HomeActivity.class);
                     goToPage.putExtra("email", emailId.getText().toString());
                     startActivity(goToPage);
-                }
-                else{
+                } else {
                     Toast.makeText(LoginActivity.this, "Please Log In", Toast.LENGTH_SHORT).show();
 
                 }
             }
         };
-        
-//        btnBacktomain.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
-//                startActivity(goToPage);
-//            }
-//        });
 
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = emailId.getText().toString();
                 String pwd = password.getText().toString();
-                if (email.isEmpty()){
+                if (email.isEmpty()) {
                     emailId.setError("Please enter email id");
                     emailId.requestFocus();
-                }
-                else if (pwd.isEmpty()){
+                } else if (pwd.isEmpty()) {
                     password.setError("Please enter a password");
                     password.requestFocus();
-                }
-                else if (email.isEmpty() && pwd.isEmpty()){
-                    Toast.makeText(LoginActivity.this,"Fields are empty", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(!(email.isEmpty() && pwd.isEmpty())){
+                } else if (email.isEmpty() && pwd.isEmpty()) {
+                    Toast.makeText(LoginActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
+                } else if (!(email.isEmpty() && pwd.isEmpty())) {
                     mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(!task.isSuccessful()){
+                            if (!task.isSuccessful()) {
                                 Toast.makeText(LoginActivity.this, "Login Error, Please Log In Again", Toast.LENGTH_SHORT).show();
-                            } else{
+                            } else {
                                 Intent intToHome = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intToHome);
                             }
@@ -109,13 +95,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void  onStart(){
+    protected void onStart() {
         super.onStart();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
-    public void goToMainActivity(View view)
-    {
+    public void goToMainActivity(View view) {
         Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(goToPage);
     }

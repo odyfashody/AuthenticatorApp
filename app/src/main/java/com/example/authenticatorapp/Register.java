@@ -29,7 +29,7 @@ public class Register extends AppCompatActivity {
     private final String TAG = "RegisterActivity";
     EditText emailId, password, businessName, businessAddress;
     String startTime, endTime;
-    Button   btnSignUp;
+    Button btnSignUp;
     TextView textSignIn;
     FirebaseAuth mAuth;
     DocumentReference db;
@@ -56,49 +56,40 @@ public class Register extends AppCompatActivity {
                 String email = emailId.getText().toString();
                 String pwd = password.getText().toString();
 
-                if (email.isEmpty()){
+                if (email.isEmpty()) {
                     emailId.setError("Please enter email id");
                     emailId.requestFocus();
-                }
-                else if (pwd.isEmpty()){
+                } else if (pwd.isEmpty()) {
                     password.setError("Please enter a password");
                     password.requestFocus();
-                }
-                else if (email.isEmpty() && pwd.isEmpty()){
-                    Toast.makeText(Register.this,"Fields are empty", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(!(email.isEmpty() && pwd.isEmpty())){
+                } else if (email.isEmpty() && pwd.isEmpty()) {
+                    Toast.makeText(Register.this, "Fields are empty", Toast.LENGTH_SHORT).show();
+                } else if (!(email.isEmpty() && pwd.isEmpty())) {
                     mAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(!task.isSuccessful()){
+                            if (!task.isSuccessful()) {
                                 Toast.makeText(Register.this, "SignUp Unsuccessful, Please Try Again", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(Register.this, "SignUp Successful", Toast.LENGTH_SHORT).show();
-//                                currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//                                String userID = currentUser.getUid();
-//                                saveProviderInput(userID);
-                                Map<String, Object> providerData = new HashMap<>();
-                                providerData.put("name", businessName.getText().toString());
-                                providerData.put("email", emailId.getText().toString());
-                                providerData.put("address", businessAddress.getText().toString());
-                                providerData.put("startTime", startTime);
-                                providerData.put("endTime", endTime);
-                                db = FirebaseFirestore.getInstance().collection("Providers").document(businessName.getText().toString());
-                                db.set(providerData).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "Success! Saved to db!");
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG, "Error! Not saved to db!", e);
-                                    }
-                                });
-//                                Intent goToPage = new Intent(Register.this, LoginActivity.class);
-//                                startActivity(goToPage);
+//                                Map<String, Object> providerData = new HashMap<>();
+//                                providerData.put("name", businessName.getText().toString());
+//                                providerData.put("email", emailId.getText().toString());
+//                                providerData.put("address", businessAddress.getText().toString());
+//                                providerData.put("startTime", startTime);
+//                                providerData.put("endTime", endTime);
+//                                db = FirebaseFirestore.getInstance().collection("Providers").document(businessName.getText().toString());
+//                                db.set(providerData).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//                                        Log.d(TAG, "Success! Saved to db!");
+//                                    }
+//                                }).addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Log.w(TAG, "Error! Not saved to db!", e);
+//                                    }
+//                                });
                             }
                         }
                     });
@@ -117,8 +108,28 @@ public class Register extends AppCompatActivity {
         });
     }
 
-    public void goToMainActivity(View view)
-    {
+    public void saveData() {
+        Map<String, Object> providerData = new HashMap<>();
+        providerData.put("name", businessName.getText().toString());
+        providerData.put("email", emailId.getText().toString());
+        providerData.put("address", businessAddress.getText().toString());
+        providerData.put("startTime", startTime);
+        providerData.put("endTime", endTime);
+        db = FirebaseFirestore.getInstance().collection("Providers").document(businessName.getText().toString());
+        db.set(providerData).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Success! Saved to db!");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error! Not saved to db!", e);
+            }
+        });
+    }
+
+    public void goToMainActivity(View view) {
         Intent goToPage = new Intent(Register.this, MainActivity.class);
         startActivity(goToPage);
     }

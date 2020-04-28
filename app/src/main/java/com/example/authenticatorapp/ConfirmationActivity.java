@@ -55,8 +55,7 @@ public class ConfirmationActivity extends AppCompatActivity {
         db.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if(documentSnapshot.exists())
-                {
+                if (documentSnapshot.exists()) {
                     //Calling database to ensure it read & writes (Learning process)
                     String tClientName = documentSnapshot.getString(CLIENT_NAME);
                     String tCompanyName = documentSnapshot.getString(COMPANY_NAME);

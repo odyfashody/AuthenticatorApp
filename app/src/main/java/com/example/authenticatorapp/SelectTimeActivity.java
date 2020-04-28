@@ -61,7 +61,7 @@ public class SelectTimeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_time);
 
         listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
-        textViewCompanyName = (TextView)findViewById(R.id.textViewBusinessName);
+        textViewCompanyName = (TextView) findViewById(R.id.textViewBusinessName);
 
         //Getting the passed variables from previous Activity.
         Intent extraIntentInfo = getIntent();
@@ -76,17 +76,13 @@ public class SelectTimeActivity extends AppCompatActivity {
         colRef.document(companyName).collection(appointmentDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful())
-                {
-                    for(QueryDocumentSnapshot document : task.getResult())
-                    {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
                         bookedAppointments.add(document.getId());
                     }
                     listViewSchedule.setAdapter(adapter);
                     Log.d(TAG, bookedAppointments.toString());
-                }
-                else
-                {
+                } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }

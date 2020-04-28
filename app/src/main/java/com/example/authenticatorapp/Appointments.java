@@ -7,11 +7,11 @@ public class Appointments {
     private String AppointmentTime;
     private String CompanyName;
 
-    Appointments(){
+    Appointments() {
 
     }
-    Appointments(String clientName, String phoneNumber, String appointmentDate, String appointmentTime, String companyName)
-    {
+
+    Appointments(String clientName, String phoneNumber, String appointmentDate, String appointmentTime, String companyName) {
         this.ClientName = clientName;
         this.ClientPhoneNumber = phoneNumber;
         this.AppointmentDate = appointmentDate;
