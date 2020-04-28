@@ -55,6 +55,14 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
+        
+            btnBacktomain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(goToPage);
+            }
+        });
 
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,4 +119,9 @@ public class LoginActivity extends AppCompatActivity {
         Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(goToPage);
     }
+<<<<<<< HEAD
+=======
+    
+
+>>>>>>> 278e22bca2be71fedc2ecd357b4b93ade0e5221c
 }
