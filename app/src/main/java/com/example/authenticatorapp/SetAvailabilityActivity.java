@@ -11,11 +11,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
 public class SetAvailabilityActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
+//    FirebaseAuth mFirebaseAuth;
+//    FirebaseAuth.AuthStateListener mAuthStateListener;
+//    FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

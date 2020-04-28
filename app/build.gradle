@@ -33,6 +33,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     implementation 'com.google.firebase:firebase-auth:19.3.0'
 
+    implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
+
     //For Nate's Emulator to work
     implementation 'com.android.support:multidex:1.0.3'
 }

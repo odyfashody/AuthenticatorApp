@@ -58,9 +58,6 @@ public class ClientInformationActivity extends AppCompatActivity {
 
         //Adding information to the local object object.put(KEY, value);
         dataToSave = new HashMap<String, Object>();
-        dataToSave.put(COMPANY_NAME, companyName);
-        dataToSave.put(APPOINTMENT_DATE, appointmentDate);
-        dataToSave.put(APPOINTMENT_TIME, appointmentTime);
 
         textViewAppointmentInfo.setText(NameDateAndTime);
     }
@@ -77,6 +74,10 @@ public class ClientInformationActivity extends AppCompatActivity {
         //Retrieving text input
         EditText nameEditText = (EditText) findViewById(R.id.editTextClientName);
         EditText phoneNumberEditText = (EditText) findViewById(R.id.editTextClientPhoneNumber);
+        dataToSave.put(COMPANY_NAME, companyName);
+        dataToSave.put(APPOINTMENT_DATE, appointmentDate);
+        dataToSave.put(APPOINTMENT_TIME, appointmentTime);
+
         clientName = nameEditText.getText().toString();
         clientPhoneNumber = phoneNumberEditText.getText().toString();
 
@@ -89,6 +90,7 @@ public class ClientInformationActivity extends AppCompatActivity {
 
         //The route to save the local object to
         db = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(PATH_DATE_COLLECTION).document(appointmentDate).collection(PATH_CLIENT_COLLECTION).document(appointmentTime);
+
         //Saves to the db within the user collection. add() method gives it the random ID and saves to db.
         db.set(dataToSave).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
