@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     EditText emailId, password;
-    Button btnSignin;
+    Button btnSignin, btnBacktomain;
     TextView tvSignup;
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -111,4 +111,12 @@ public class LoginActivity extends AppCompatActivity {
         Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(goToPage);
     }
+    
+            btnBacktomain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(goToPage);
+            }
+        });
 }
