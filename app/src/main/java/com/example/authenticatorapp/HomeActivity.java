@@ -48,6 +48,7 @@ public class HomeActivity extends AppCompatActivity {
     private String TAG = "HomeActivity";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference docRef = db.collection(PATH_PROVIDER_COLLECTION);
+
     //        db.collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(currDateStr);
 
     private Provider provider;
@@ -69,39 +70,44 @@ public class HomeActivity extends AppCompatActivity {
         Intent extraIntentInfo = getIntent();
         String email = extraIntentInfo.getStringExtra("email");
 
-        db.collection("Providers")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                provider = document.toObject(Provider.class);
-                                Log.d(TAG, document.getId() + ": " + document.getData());
-                                companyName = provider.getCompanyName();
-//                                docRef.document(companyName).collection("3-29-2020");
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+//        db.collection("Providers")
+//                .whereEqualTo("email", email)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                provider = document.toObject(Provider.class);
+//                                Log.d(TAG, document.getId() + ": " + document.getData());
+//                                companyName = provider.getCompanyName();
+////                                docRef.document(companyName).collection("3-29-2020");
+//                            }
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                        }
+//                    }
+//                });
 
-        docRef.whereEqualTo("Appointment Date", "3-29-2020")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
+        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful())
+                {
+                    for(QueryDocumentSnapshot document : task.getResult())
+                    {
+                        schedule.add(document.getId());
                     }
-                });
+                    listViewSchedule.setAdapter(adapter);
+                    Log.d(TAG, schedule.toString());
+                }
+                else
+                {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
 //        docRef.document(companyName).collection("3-29-2020");
 //        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //            @Override

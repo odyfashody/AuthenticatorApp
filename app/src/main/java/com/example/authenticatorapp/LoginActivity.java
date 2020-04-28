@@ -111,12 +111,4 @@ public class LoginActivity extends AppCompatActivity {
         Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(goToPage);
     }
-    
-            btnBacktomain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(goToPage);
-            }
-        });
 }
