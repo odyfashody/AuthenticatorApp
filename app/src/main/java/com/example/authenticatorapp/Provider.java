@@ -1,7 +1,7 @@
 package com.example.authenticatorapp;
 
 public class Provider {
-    private String name;
+    public String name;
     private String address;
     private String startTime;
     private String endTime;

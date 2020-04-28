@@ -58,6 +58,7 @@ public class SearchProviderActivity extends AppCompatActivity {
         listViewBusinessNameQuery = (ListView) findViewById(R.id.listViewBusinesses);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, BusinessNames);
 
+        //Gets the businesses from Firestore
         providerRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

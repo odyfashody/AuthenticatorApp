@@ -20,8 +20,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
 
 
-    EditText emailId, password;
-    Button btnSignin, btnBacktomain;
+    private EditText emailId, password;
+    private Button btnSignin, btnBacktomain;
     TextView tvSignup;
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -56,13 +56,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         
-            btnBacktomain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(goToPage);
-            }
-        });
+//        btnBacktomain.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
+//                startActivity(goToPage);
+//            }
+//        });
 
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,9 +119,4 @@ public class LoginActivity extends AppCompatActivity {
         Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(goToPage);
     }
-<<<<<<< HEAD
-=======
-    
-
->>>>>>> 278e22bca2be71fedc2ecd357b4b93ade0e5221c
 }

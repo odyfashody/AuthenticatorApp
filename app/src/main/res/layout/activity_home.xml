@@ -27,16 +27,17 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textViewMiniTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcome_you_are_logged_in"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textMainCompanyTitle"
-        app:layout_constraintVertical_bias="0.106" />
+        app:layout_constraintVertical_bias="0.119" />
 
     <Button
         android:id="@+id/buttonLogout"

@@ -1,11 +1,11 @@
 package com.example.authenticatorapp;
 
 public class Client {
-    public String appointmentDate;
-    public String appointmentTime;
-    public String clientName;
-    public String clientPhoneNumber;
-    public String companyName;
+    private String appointmentDate;
+    private String appointmentTime;
+    private String clientName;
+    private String clientPhoneNumber;
+    private String companyName;
 
     Client(){}
 
@@ -17,7 +17,27 @@ public class Client {
         this.companyName = companyName;
     }
 
-    public String toString()
+    public String getAppointmentDate(){
+        return appointmentDate;
+    }
+
+    public String getAppointmentTime(){
+        return  appointmentTime;
+    }
+
+    public String getClientName(){
+        return  clientName;
+    }
+
+    public String getClientPhoneNumber(){
+        return clientPhoneNumber;
+    }
+
+    public String getCompanyName(){
+        return companyName;
+    }
+
+    public String fullInfo()
     {
         return companyName + "\n" + appointmentDate + " " + appointmentTime + "\n" + clientName + "\n" + clientPhoneNumber;
     }

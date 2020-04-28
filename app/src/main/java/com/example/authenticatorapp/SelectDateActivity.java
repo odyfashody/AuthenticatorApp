@@ -35,7 +35,7 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 Intent goToTimeActivity = new Intent(SelectDateActivity.this, SelectTimeActivity.class);
-                date = month + "-" + dayOfMonth + "-" + year;
+                date = (month + 1) + "-" + dayOfMonth + "-" + year;
                 goToTimeActivity.putExtra(APPOINTMENT_DATE, date);
                 goToTimeActivity.putExtra(COMPANY_NAME, companyName);
                 startActivity(goToTimeActivity);

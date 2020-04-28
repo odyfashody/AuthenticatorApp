@@ -88,8 +88,10 @@ public class ClientInformationActivity extends AppCompatActivity {
         dataToSave.put(CLIENT_NAME, clientName);
         dataToSave.put(CLIENT_PHONE_NUMBER, clientPhoneNumber);
 
-        //The route to save the local object to
-//        db = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(PATH_DATE_COLLECTION).document(appointmentDate).collection(PATH_CLIENT_COLLECTION).document(appointmentTime);
+//        Map<String, Object> saveDate = new HashMap<>();
+//        saveDate.put(APPOINTMENT_DATE, appointmentDate);
+
+        //The route to save the local object in Firestore
         db = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(appointmentDate).document(appointmentTime);
 
         //Saves to the db within the user collection. add() method gives it the random ID and saves to db.
