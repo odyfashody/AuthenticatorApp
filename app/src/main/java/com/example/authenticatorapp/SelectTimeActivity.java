@@ -38,7 +38,6 @@ public class SelectTimeActivity extends AppCompatActivity {
     private static final String PATH_CLIENT_COLLECTION = "Clients";
     //Database setup
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private DocumentReference docRef;
     private CollectionReference colRef = db.collection(PATH_PROVIDER_COLLECTION);
     //Logging information
     private final String TAG = "SelectTime";
@@ -72,22 +71,23 @@ public class SelectTimeActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
 
+        //Temporary schedule till business registration completed
+        schedule.add("7:00 AM");
+        schedule.add("8:00 AM");
+        schedule.add("9:00 AM");
+        schedule.add("10:00 AM");
+        schedule.add("11:00 AM");
+        schedule.add("12:00 PM");
+        schedule.add("1:00 PM");
+        schedule.add("2:00 PM");
+        schedule.add("3:00 PM");
+        schedule.add("4:00 PM");
+        schedule.add("5:00 PM");
+        schedule.add("6:00 PM");
+        schedule.add("7:00 PM");
+        schedule.add("8:00 PM");
 
-        colRef.document(companyName).collection(appointmentDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        bookedAppointments.add(document.getId());
-                    }
-                    listViewSchedule.setAdapter(adapter);
-                    Log.d(TAG, bookedAppointments.toString());
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
-
+        //Gets the provider information
         final DocumentReference docRef = db.collection(PATH_PROVIDER_COLLECTION).document(companyName);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -109,43 +109,22 @@ public class SelectTimeActivity extends AppCompatActivity {
             }
         });
 
+        //Gets the scheduled appointments
+        colRef.document(companyName).collection(appointmentDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        schedule.remove(document.getId());
+                    }
+                    listViewSchedule.setAdapter(adapter);
+                    Log.d(TAG, "Line 105: " + bookedAppointments.toString());
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
 
-        System.out.println("Start time: " + startTime);
-        System.out.println("End time: " + endTime);
-//        int startWhereColonIs = startTime.indexOf(':');
-//        String startHour = startTime.substring(0, startWhereColonIs);
-//        int endWhereColonIs = endTime.indexOf(':');
-//        String endHour = endTime.substring(0, endWhereColonIs);
-//        for(int i = 0; i < 2; i ++)
-//        {
-//            for(int j = 1; j <= 12; j++)
-//            {
-//                if(i == 0 && j >= Integer.parseInt(startHour))
-//                {
-//                    schedule.add(j + ":00 AM");
-//                }
-//                if(i == 1 && j <= Integer.parseInt(endHour))
-//                {
-//                    schedule.add(j + ":00 PM");
-//                }
-//            }
-//        }
-
-        //Temporary schedule till business registration completed
-//        schedule.add("7:00 AM");
-//        schedule.add("8:00 AM");
-        schedule.add("9:00 AM");
-        schedule.add("10:00 AM");
-        schedule.add("11:00 AM");
-        schedule.add("12:00 PM");
-        schedule.add("1:00 PM");
-        schedule.add("2:00 PM");
-        schedule.add("3:00 PM");
-        schedule.add("4:00 PM");
-        schedule.add("5:00 PM");
-//        schedule.add("6:00 PM");
-//        schedule.add("7:00 PM");
-//        schedule.add("8:00 PM");
 
         listViewSchedule.setAdapter(adapter);
 
