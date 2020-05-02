@@ -72,6 +72,13 @@ public class SelectTimeActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
 
         //Temporary schedule till business registration completed
+        schedule.add("12:00 AM");
+        schedule.add("1:00 AM");
+        schedule.add("2:00 AM");
+        schedule.add("3:00 AM");
+        schedule.add("4:00 AM");
+        schedule.add("5:00 AM");
+        schedule.add("6:00 AM");
         schedule.add("7:00 AM");
         schedule.add("8:00 AM");
         schedule.add("9:00 AM");
@@ -86,6 +93,9 @@ public class SelectTimeActivity extends AppCompatActivity {
         schedule.add("6:00 PM");
         schedule.add("7:00 PM");
         schedule.add("8:00 PM");
+        schedule.add("9:00 PM");
+        schedule.add("10:00 PM");
+        schedule.add("11:00 PM");
 
         //Gets the provider information
         final DocumentReference docRef = db.collection(PATH_PROVIDER_COLLECTION).document(companyName);
@@ -97,6 +107,7 @@ public class SelectTimeActivity extends AppCompatActivity {
                     if (document.exists()) {
                         provider = document.toObject(Provider.class);
                         startTime = provider.getStartTime();
+                        endTime = provider.getEndTime();
                         endTime = provider.getEndTime();
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         Log.d(TAG, "provider: " + provider.toString());
@@ -125,6 +136,11 @@ public class SelectTimeActivity extends AppCompatActivity {
             }
         });
 
+        //Need to remove times outside set schedule
+
+//        for(String currTime : schedule){
+//            if ()
+//        }
 
         listViewSchedule.setAdapter(adapter);
 
