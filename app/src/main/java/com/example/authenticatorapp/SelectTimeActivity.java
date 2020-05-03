@@ -23,6 +23,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class SelectTimeActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
@@ -34,8 +35,8 @@ public class SelectTimeActivity extends AppCompatActivity {
     private static final String CLIENT_PHONE_NUMBER = "ClientPhoneNumber";
     //Database collection/path names
     private static final String PATH_PROVIDER_COLLECTION = "Providers";
-    private static final String PATH_DATE_COLLECTION = "Daily Schedule";
-    private static final String PATH_CLIENT_COLLECTION = "Clients";
+    private static final String PATH_DAILY_SCHEDULE = "Daily Schedule";
+    private static final String PATH_APPOINTMENT_TIMES = "Appointment Times";
     //Database setup
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference colRef = db.collection(PATH_PROVIDER_COLLECTION);
@@ -52,7 +53,6 @@ public class SelectTimeActivity extends AppCompatActivity {
     String startTime;
     String endTime;
     ArrayList<String> schedule = new ArrayList<>();
-    ArrayList<String> bookedAppointments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +121,7 @@ public class SelectTimeActivity extends AppCompatActivity {
         });
 
         //Gets the scheduled appointments
-        colRef.document(companyName).collection(appointmentDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        colRef.document(companyName).collection(PATH_DAILY_SCHEDULE).document(appointmentDate).collection(PATH_APPOINTMENT_TIMES).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -129,7 +129,6 @@ public class SelectTimeActivity extends AppCompatActivity {
                         schedule.remove(document.getId());
                     }
                     listViewSchedule.setAdapter(adapter);
-                    Log.d(TAG, "Line 105: " + bookedAppointments.toString());
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
@@ -137,10 +136,6 @@ public class SelectTimeActivity extends AppCompatActivity {
         });
 
         //Need to remove times outside set schedule
-
-//        for(String currTime : schedule){
-//            if ()
-//        }
 
         listViewSchedule.setAdapter(adapter);
 

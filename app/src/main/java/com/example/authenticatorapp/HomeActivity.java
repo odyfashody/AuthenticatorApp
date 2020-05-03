@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -17,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,7 +32,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
@@ -43,8 +47,8 @@ public class HomeActivity extends AppCompatActivity {
     private static final String CLIENT_PHONE_NUMBER = "ClientPhoneNumber";
     //Database collection/path names
     private static final String PATH_PROVIDER_COLLECTION = "Providers";
-    private static final String PATH_DATE_COLLECTION = "Daily Schedule";
-    private static final String PATH_CLIENT_COLLECTION = "Clients";
+    private static final String PATH_DAILY_SCHEDULE = "Daily Schedule";
+    private static final String PATH_APPOINTMENT_TIMES = "Appointment Times";
 
     private String companyEmail;
     private String companyName;
@@ -54,15 +58,16 @@ public class HomeActivity extends AppCompatActivity {
 
     private String TAG = "HomeActivity";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference colRef = db.collection(PATH_PROVIDER_COLLECTION);
-    private DocumentReference docRef;
+    private CollectionReference colRef;
+    private Map<String, Object> data;
 
     private Provider provider;
-
 
     private Button btnLogout;
     private TextView textViewMiniTitle;
     private Button buttonSetSchedule;
+
+    private String tempCompanyName = "123456 DB Testing";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,32 +78,47 @@ public class HomeActivity extends AppCompatActivity {
         listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
         textViewMiniTitle = (TextView) findViewById(R.id.textViewMiniTitle);
         btnLogout = findViewById(R.id.buttonLogout);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
-        //Get current date
-        SimpleDateFormat formatter = new SimpleDateFormat("M-dd-yyyy");
-        Date date = new Date();
-        String dateStr = formatter.format(date);
-        textViewMiniTitle.setText(dateStr);
+//        final String companyName = "";
 
-        Intent extraIntentInfo = getIntent();
-        final String email = extraIntentInfo.getStringExtra("email");
-//-----------------------------------GETS USER BY USING EMAIL-----------------------------------------
-        colRef.whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
+        data = new HashMap<String, Object>();
+        //Get current date
+//        SimpleDateFormat formatter = new SimpleDateFormat("M-dd-yyyy");
+//        Date date = new Date();
+//        String dateStr = formatter.format(date);
+
+        //Get signed in user's email
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        companyEmail = user.getEmail();
+        companyName = user.getDisplayName();
+        Log.d(TAG, "Line 94: " + companyName);
+        //query database using their email
+        colRef = db.collection(PATH_PROVIDER_COLLECTION);
+        Query emailQuery = colRef.whereEqualTo("email", companyEmail);
+        //Pulls the data on provider using email
+        emailQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                        Log.d(TAG, documentSnapshot.getId() + ": " + documentSnapshot.getData());
+                    for (QueryDocumentSnapshot document : task.getResult())
+                    {
+                        data = document.getData();
+                        companyName = document.getString("name");
+                        tempCompanyName = document.getString("name");
+                        Log.d(TAG, document.getId() + "\nLINE 101: " + document.getData());
+                        Log.d(TAG, "\ndata info: " + data.toString());
+                        textViewMiniTitle.setText(companyName);
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+                else {
+                    Log.d(TAG, "Error getting documents: " + task.getException());
                 }
             }
         });
-
-//        textViewMiniTitle.setText(companyEmail);
-//        -------------------GETS TIMES----------------
-        colRef.document("JK Express Shipping").collection(dateStr).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//        companyName = user.getDisplayName(); //this no worky
+        //Gets the providers -- CANT GET THE STRING companyName TO WORK PROPERLY OUTSIDE FOR LOOP ABOVE^
+        colRef = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(tempCompanyName).collection(PATH_DAILY_SCHEDULE); //Hard coded w tempCompanyName
+        colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -113,42 +133,19 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-//        db.collection(PATH_PROVIDER_COLLECTION).document("JK Express Shipping");
-//        ------------------------GETS THE BUSINESS ID-------------------------------
-//        docRef = db.collection(PATH_PROVIDER_COLLECTION).document(companyName);
-//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful())
-//                {
-//                    DocumentSnapshot documentSnapshot = task.getResult();
-////                    textViewMiniTitle.setText(documentSnapshot.toString());
-//                    schedule.add(documentSnapshot.getId());
-//                    listViewSchedule.setAdapter(adapter);
-//                    Log.d(TAG, schedule.toString());
-//                }
-//                else
-//                {
-//                    Log.d(TAG, "Error getting documents: ", task.getException());
-//                }
-//            }
-//        });
+        //Date list click functionality - Go to ScheduleViewActivity for specific date selected
+        listViewSchedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+                Intent goToSelectedBusinessActivity = new Intent(HomeActivity.this, ScheduleViewActivity.class);
+                String date = (String) adapter.getItemAtPosition(position).toString();
+                goToSelectedBusinessActivity.putExtra(APPOINTMENT_DATE, date);
+                goToSelectedBusinessActivity.putExtra(COMPANY_NAME, tempCompanyName);
+                startActivity(goToSelectedBusinessActivity);
+            }
+        });
 
-
-//        schedule.add("Eric @ 11:00 AM\nPhone: 5592345678");
-//        schedule.add("John @ 3:00 PM\nPhone: 1233211234");
-//        schedule.add("Bob @ 4:00 PM\n Phone: 4093124949");
-//        schedule.add("Debra @ 6:00 PM\n Phone: 4093124949");
-//        schedule.add("Kyle @ 7:00 PM\n Phone: 4093124949");
-
-
-//        listViewSchedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(final AdapterView<?> adapter, View view, int position, long arg) {
-//                adapter.removeViewInLayout(view);
-//            }
-//        });
-
+        //Logout button functionality
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,6 +156,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //Go to sestAvailabilityActivity button functionality
         buttonSetSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

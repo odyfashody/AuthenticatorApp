@@ -49,9 +49,8 @@ public class ConfirmationActivity extends AppCompatActivity {
         companyName = extraIntentInfo.getStringExtra(COMPANY_NAME);
         appointmentDate = extraIntentInfo.getStringExtra(APPOINTMENT_DATE);
         appointmentTime = extraIntentInfo.getStringExtra(APPOINTMENT_TIME);
-
-//        db = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(PATH_DATE_COLLECTION).document(appointmentDate).collection(PATH_CLIENT_COLLECTION).document(appointmentTime);
-        db = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(appointmentDate).document(appointmentTime);
+        db = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection("Daily Schedule")
+                .document(appointmentDate).collection("Appointment Times").document(appointmentTime);
         db.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {

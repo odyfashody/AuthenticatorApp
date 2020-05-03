@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -72,24 +73,10 @@ public class Register extends AppCompatActivity {
                                 Toast.makeText(Register.this, "SignUp Unsuccessful, Please Try Again", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(Register.this, "SignUp Successful", Toast.LENGTH_SHORT).show();
-//                                Map<String, Object> providerData = new HashMap<>();
-//                                providerData.put("name", businessName.getText().toString());
-//                                providerData.put("email", emailId.getText().toString());
-//                                providerData.put("address", businessAddress.getText().toString());
-//                                providerData.put("startTime", startTime);
-//                                providerData.put("endTime", endTime);
-//                                db = FirebaseFirestore.getInstance().collection("Providers").document(businessName.getText().toString());
-//                                db.set(providerData).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                    @Override
-//                                    public void onSuccess(Void aVoid) {
-//                                        Log.d(TAG, "Success! Saved to db!");
-//                                    }
-//                                }).addOnFailureListener(new OnFailureListener() {
-//                                    @Override
-//                                    public void onFailure(@NonNull Exception e) {
-//                                        Log.w(TAG, "Error! Not saved to db!", e);
-//                                    }
-//                                });
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(businessName.getText().toString()).build();
+                                user.updateProfile(profileUpdates);
+                                saveData();
                             }
                         }
                     });
@@ -115,6 +102,7 @@ public class Register extends AppCompatActivity {
         providerData.put("address", businessAddress.getText().toString());
         providerData.put("startTime", startTime);
         providerData.put("endTime", endTime);
+
         db = FirebaseFirestore.getInstance().collection("Providers").document(businessName.getText().toString());
         db.set(providerData).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

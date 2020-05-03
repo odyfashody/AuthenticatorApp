@@ -23,6 +23,7 @@ import java.util.Map;
 public class ClientInformationActivity extends AppCompatActivity {
     //Database (db) and temporary object (dateToSave) container
     private Map<String, Object> dataToSave;
+    private Map<String, Object> saveDate;
     private DocumentReference db;
     //Intent keys for getStringExtra() retrieval
     private static final String COMPANY_NAME = "CompanyName";
@@ -58,6 +59,7 @@ public class ClientInformationActivity extends AppCompatActivity {
 
         //Adding information to the local object object.put(KEY, value);
         dataToSave = new HashMap<String, Object>();
+        saveDate = new HashMap<String, Object>();
 
         textViewAppointmentInfo.setText(NameDateAndTime);
     }
@@ -87,18 +89,20 @@ public class ClientInformationActivity extends AppCompatActivity {
         //Adding the remaining info to local object
         dataToSave.put(CLIENT_NAME, clientName);
         dataToSave.put(CLIENT_PHONE_NUMBER, clientPhoneNumber);
-
-//        Map<String, Object> saveDate = new HashMap<>();
-//        saveDate.put(APPOINTMENT_DATE, appointmentDate);
+        //Adding the date in case needed for something.
+        saveDate.put("date", appointmentDate);
 
         //The route to save the local object in Firestore
-        db = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(appointmentDate).document(appointmentTime);
-
+        db = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection("Daily Schedule")
+                .document(appointmentDate).collection("Appointment Times").document(appointmentTime);
         //Saves to the db within the user collection. add() method gives it the random ID and saves to db.
         db.set(dataToSave).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d(TAG, "Success! Saved to db!");
+                //Saves date string to Daily Schedule document - Used in HomeActivity appointment dates
+                db = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection("Daily Schedule").document(appointmentDate);
+                db.set(saveDate);
                 //Calls intent function if successful
                 goToConfirmationActivity(view);
             }

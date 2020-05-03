@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ScheduleViewActivity"></activity>
         <activity android:name=".SetAvailabilityActivity" />
         <activity android:name=".ConfirmationActivity" />
         <activity android:name=".ClientInformationActivity" />
