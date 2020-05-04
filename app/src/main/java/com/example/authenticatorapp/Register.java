@@ -89,6 +89,7 @@ public class Register extends AppCompatActivity {
                                 Toast.makeText(Register.this, "SignUp Successful", Toast.LENGTH_SHORT).show();
                                 addDisplayName();
                                 saveData();
+                                goToLoginActivity();
                             }
                         }
                     });
@@ -101,8 +102,8 @@ public class Register extends AppCompatActivity {
         textSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Register.this, LoginActivity.class);
-                startActivity(i);
+                Intent goToLoginActivity = new Intent(Register.this, LoginActivity.class);
+                startActivity(goToLoginActivity);
             }
         });
     }
@@ -136,6 +137,11 @@ public class Register extends AppCompatActivity {
 
     public void goToMainActivity(View view) {
         Intent goToPage = new Intent(Register.this, MainActivity.class);
+        startActivity(goToPage);
+    }
+
+    public void goToLoginActivity(){
+        Intent goToPage = new Intent(Register.this, LoginActivity.class);
         startActivity(goToPage);
     }
 }
