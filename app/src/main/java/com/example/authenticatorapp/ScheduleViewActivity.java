@@ -57,36 +57,31 @@ public class ScheduleViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_view);
-
-        TextView textViewDate = (TextView) findViewById(R.id.textViewDate);
-        final ListView listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
-
-
+        //Passed over intent extra info from HomeActivity
         Intent extraIntentInfo = getIntent();
         appointmentDate = extraIntentInfo.getStringExtra(APPOINTMENT_DATE);
         companyName = extraIntentInfo.getStringExtra(COMPANY_NAME);
 
+        TextView textViewDate = (TextView) findViewById(R.id.textViewDate);
+        final ListView listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
         textViewDate.setText(appointmentDate);
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
 
-        appointments = db.collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(PATH_DAILY_SCHEDULE)
-                .document(appointmentDate).collection(PATH_APPOINTMENT_TIMES);
-
+        //Initializing functionality to get dates with appointments on Firebase
+        appointments = db.collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(PATH_DAILY_SCHEDULE).document(appointmentDate).collection(PATH_APPOINTMENT_TIMES);
         Query clientsQuery = appointments.whereEqualTo(APPOINTMENT_DATE, appointmentDate);
-
-        //pulls all the clients on this date
+        //pulls all the appointments on selected date
         clientsQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult())
-                    {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        //Need to pull all the clients info save it by object then add to a list/recycler view
 //                        schedule.add(document.getData().toString());
-                        Log.d(TAG, document.getId() + "\nLINE 84: " + document.getData());
+                        Log.d(TAG, document.getId() + "\nAppointments today: " + document.getData());
                     }
-                }
-                else {
+                } else {
                     Log.d(TAG, "Error getting documents: " + task.getException());
                 }
             }

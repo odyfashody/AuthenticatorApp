@@ -39,6 +39,7 @@ import java.util.Map;
 public class HomeActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
     final ArrayList<String> schedule = new ArrayList<>();
+    private CollectionReference colRef;
     //Intent keys for getStringExtra() retrieval
     private static final String COMPANY_NAME = "CompanyName";
     private static final String APPOINTMENT_DATE = "AppointmentDate";
@@ -50,24 +51,16 @@ public class HomeActivity extends AppCompatActivity {
     private static final String PATH_DAILY_SCHEDULE = "Daily Schedule";
     private static final String PATH_APPOINTMENT_TIMES = "Appointment Times";
 
-    private String companyEmail;
     private String companyName;
     private String appointmentDate;
     private String appointmentTime;
     private ListView listViewSchedule;
 
     private String TAG = "HomeActivity";
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference colRef;
-    private Map<String, Object> data;
-
-    private Provider provider;
 
     private Button btnLogout;
     private TextView textViewMiniTitle;
     private Button buttonSetSchedule;
-
-    private String tempCompanyName = "123456 DB Testing";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,46 +71,16 @@ public class HomeActivity extends AppCompatActivity {
         listViewSchedule = (ListView) findViewById(R.id.listViewSchedule);
         textViewMiniTitle = (TextView) findViewById(R.id.textViewMiniTitle);
         btnLogout = findViewById(R.id.buttonLogout);
-//        final String companyName = "";
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
-        data = new HashMap<String, Object>();
-        //Get current date
-//        SimpleDateFormat formatter = new SimpleDateFormat("M-dd-yyyy");
-//        Date date = new Date();
-//        String dateStr = formatter.format(date);
-
-        //Get signed in user's email
+        //Get signed in user's company name (Display name set in register activity)
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        companyEmail = user.getEmail();
         companyName = user.getDisplayName();
-        Log.d(TAG, "Line 94: " + companyName);
-        //query database using their email
-        colRef = db.collection(PATH_PROVIDER_COLLECTION);
-        Query emailQuery = colRef.whereEqualTo("email", companyEmail);
-        //Pulls the data on provider using email
-        emailQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult())
-                    {
-                        data = document.getData();
-                        companyName = document.getString("name");
-                        tempCompanyName = document.getString("name");
-                        Log.d(TAG, document.getId() + "\nLINE 101: " + document.getData());
-                        Log.d(TAG, "\ndata info: " + data.toString());
-                        textViewMiniTitle.setText(companyName);
-                    }
-                }
-                else {
-                    Log.d(TAG, "Error getting documents: " + task.getException());
-                }
-            }
-        });
-//        companyName = user.getDisplayName(); //this no worky
-        //Gets the providers -- CANT GET THE STRING companyName TO WORK PROPERLY OUTSIDE FOR LOOP ABOVE^
-        colRef = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(tempCompanyName).collection(PATH_DAILY_SCHEDULE); //Hard coded w tempCompanyName
+        //Set title to company name
+        textViewMiniTitle.setText(companyName);
+
+        //Gets the days with appointments scheduled
+        colRef = FirebaseFirestore.getInstance().collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(PATH_DAILY_SCHEDULE);
         colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -138,9 +101,9 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                 Intent goToSelectedBusinessActivity = new Intent(HomeActivity.this, ScheduleViewActivity.class);
-                String date = (String) adapter.getItemAtPosition(position).toString();
-                goToSelectedBusinessActivity.putExtra(APPOINTMENT_DATE, date);
-                goToSelectedBusinessActivity.putExtra(COMPANY_NAME, tempCompanyName);
+                appointmentDate = (String) adapter.getItemAtPosition(position).toString();
+                goToSelectedBusinessActivity.putExtra(APPOINTMENT_DATE, appointmentDate);
+                goToSelectedBusinessActivity.putExtra(COMPANY_NAME, companyName);
                 startActivity(goToSelectedBusinessActivity);
             }
         });
@@ -156,7 +119,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        //Go to sestAvailabilityActivity button functionality
+        //Go to setAvailabilityActivity button functionality
         buttonSetSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,3 +129,32 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 }
+/**
+ * colRef = db.collection(PATH_PROVIDER_COLLECTION);
+ * Query emailQuery = colRef.whereEqualTo("email", companyEmail);
+ * //Pulls the data on provider using email
+ * emailQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+ *
+ * @Override public void onComplete(@NonNull Task<QuerySnapshot> task) {
+ * if (task.isSuccessful()) {
+ * for (QueryDocumentSnapshot document : task.getResult())
+ * {
+ * data = document.getData();
+ * companyName = document.getString("name");
+ * tempCompanyName = document.getString("name");
+ * Log.d(TAG, document.getId() + "\nLINE 101: " + document.getData());
+ * Log.d(TAG, "\ndata info: " + data.toString());
+ * textViewMiniTitle.setText(companyName);
+ * }
+ * }
+ * else {
+ * Log.d(TAG, "Error getting documents: " + task.getException());
+ * }
+ * }
+ * });
+ * <p>
+ * //Get current date
+ * //        SimpleDateFormat formatter = new SimpleDateFormat("M-dd-yyyy");
+ * //        Date date = new Date();
+ * //        String dateStr = formatter.format(date);
+ **/

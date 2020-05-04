@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private EditText emailId, password;
-    private Button btnSignin;
+    private Button btnSignin, homeButton;
     TextView tvSignup;
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -36,23 +36,23 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.editText2);
         btnSignin = findViewById(R.id.buttonLogout);
         tvSignup = findViewById(R.id.textView);
+        homeButton = (Button) findViewById(R.id.buttonLogout2);
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-                if (mFirebaseUser != null) {
-                    Toast.makeText(LoginActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
-                    Intent goToPage = new Intent(LoginActivity.this, HomeActivity.class);
-                    goToPage.putExtra("email", emailId.getText().toString());
-                    startActivity(goToPage);
-                } else {
-                    Toast.makeText(LoginActivity.this, "Please Log In", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        };
+//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
+//                if (mFirebaseUser != null) {
+//                    Toast.makeText(LoginActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
+//                    Intent goToPage = new Intent(LoginActivity.this, HomeActivity.class);
+//                    goToPage.putExtra("email", emailId.getText().toString());
+//                    startActivity(goToPage);
+//                } else {
+//                    Toast.makeText(LoginActivity.this, "Please Log In", Toast.LENGTH_SHORT).show();
+//
+//                }
+//            }
+//        };
 
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,13 +92,21 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intSignUp);
             }
         });
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intSignUp = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intSignUp);
+            }
+        });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+//    }
 
     public void goToMainActivity(View view) {
         Intent goToPage = new Intent(LoginActivity.this, MainActivity.class);

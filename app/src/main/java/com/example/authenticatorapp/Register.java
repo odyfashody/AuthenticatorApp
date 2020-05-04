@@ -20,20 +20,35 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Register extends AppCompatActivity {
     private final String TAG = "RegisterActivity";
+    private String companyName;
+    //Intent keys for getStringExtra() retrieval
+    private static final String COMPANY_NAME = "CompanyName";
+    private static final String APPOINTMENT_DATE = "AppointmentDate";
+    private static final String APPOINTMENT_TIME = "AppointmentTime";
+    private static final String CLIENT_NAME = "ClientName";
+    private static final String CLIENT_PHONE_NUMBER = "ClientPhoneNumber";
+    //Database collection/path names
+    private static final String PATH_PROVIDER_COLLECTION = "Providers";
+    private static final String PATH_DAILY_SCHEDULE = "Daily Schedule";
+    private static final String PATH_APPOINTMENT_TIMES = "Appointment Times";
+
     EditText emailId, password, businessName, businessAddress;
     String startTime, endTime;
     Button btnSignUp;
     TextView textSignIn;
     FirebaseAuth mAuth;
-    DocumentReference db;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +63,8 @@ public class Register extends AppCompatActivity {
         textSignIn = findViewById(R.id.textView3);
         businessName = findViewById(R.id.editTextBusinessName);
         businessAddress = findViewById(R.id.editTextBusinessAddress);
-        startTime = "8:00 AM";
-        endTime = "5:00 PM";
 
+        //Registers user and set display name equal to business name - When signed in can get business name that way
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,9 +87,7 @@ public class Register extends AppCompatActivity {
                                 Toast.makeText(Register.this, "SignUp Unsuccessful, Please Try Again", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(Register.this, "SignUp Successful", Toast.LENGTH_SHORT).show();
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(businessName.getText().toString()).build();
-                                user.updateProfile(profileUpdates);
+                                addDisplayName();
                                 saveData();
                             }
                         }
@@ -96,25 +108,30 @@ public class Register extends AppCompatActivity {
     }
 
     public void saveData() {
+        companyName = businessName.getText().toString();
+        startTime = "8:00 AM";
+        endTime = "5:00 PM";
+
         Map<String, Object> providerData = new HashMap<>();
-        providerData.put("name", businessName.getText().toString());
+        providerData.put("name", companyName);
         providerData.put("email", emailId.getText().toString());
         providerData.put("address", businessAddress.getText().toString());
         providerData.put("startTime", startTime);
         providerData.put("endTime", endTime);
 
-        db = FirebaseFirestore.getInstance().collection("Providers").document(businessName.getText().toString());
-        db.set(providerData).addOnSuccessListener(new OnSuccessListener<Void>() {
+        DocumentReference docRef = db.collection(PATH_PROVIDER_COLLECTION).document(companyName);
+        docRef.set(providerData).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "Success! Saved to db!");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error! Not saved to db!", e);
+                Log.d(TAG, "Saved new provider to database!");
             }
         });
+    }
+
+    public void addDisplayName() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(businessName.getText().toString()).build();
+        user.updateProfile(profileUpdates);
     }
 
     public void goToMainActivity(View view) {
