@@ -44,6 +44,8 @@ public class ScheduleViewActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference appointments;
 
+    private String clientName;
+    private String clientPhoneNumber;
     private String companyEmail;
     private String companyName;
     private String appointmentDate;
@@ -68,17 +70,22 @@ public class ScheduleViewActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schedule);
 
-        //Initializing functionality to get dates with appointments on Firebase
+        //Query the database to get all clients on the selected day
         appointments = db.collection(PATH_PROVIDER_COLLECTION).document(companyName).collection(PATH_DAILY_SCHEDULE).document(appointmentDate).collection(PATH_APPOINTMENT_TIMES);
         Query clientsQuery = appointments.whereEqualTo(APPOINTMENT_DATE, appointmentDate);
-        //pulls all the appointments on selected date
+        //Gets all the clients on the selected date and adds them to listView
         clientsQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        //Need to pull all the clients info save it by object then add to a list/recycler view
-//                        schedule.add(document.getData().toString());
+                        clientName = document.getString(CLIENT_NAME);
+                        appointmentTime = document.getString(APPOINTMENT_TIME);
+                        clientPhoneNumber = document.getString(CLIENT_PHONE_NUMBER);
+                        //Format displayed on listView
+                        String clientInfo = clientName + " @ " + appointmentTime + "\nPhone # " + clientPhoneNumber;
+                        schedule.add(clientInfo);
+                        listViewSchedule.setAdapter(adapter);
                         Log.d(TAG, document.getId() + "\nAppointments today: " + document.getData());
                     }
                 } else {
@@ -86,9 +93,5 @@ public class ScheduleViewActivity extends AppCompatActivity {
                 }
             }
         });
-
-        schedule.add("Figure out how to add client info to list");
-        schedule.add("Try a recyclerView?");
-        listViewSchedule.setAdapter(adapter);
     }
 }
